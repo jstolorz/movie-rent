@@ -11,11 +11,11 @@ router.get('/', async (req, res) => {
     res.send(customer);
 });
 
-router.post('/', async (req,res) => {
+router.post('/', async (req, res) => {
 
-    const {error} = validationGeneres(req.body);
+    const {error} = validationCustomer(req.body);
 
-    if(error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send(error.details[0].message);
 
 
     const customer = {
@@ -30,46 +30,46 @@ router.post('/', async (req,res) => {
 
 });
 
-router.get('/:id',async (req, res) => {
+router.get('/:id', async (req, res) => {
 
     const customer = await db.findOne(req.params.id);
 
-    if(!customer){
+    if (!customer) {
         res.status(404).send('The genre with given ID was not found.');
-    }else{
+    } else {
         res.send(customer);
     }
 });
 
-router.put('/:id',async (req, res) => {
+router.put('/:id', async (req, res) => {
 
-    const {error} = validationGeneres(req.body);
+    const {error} = validationCustomer(req.body);
 
-    if(error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send(error.details[0].message);
 
     const customer = await db.update(req.params.id, req.body);
 
-    if(!customer){
+    if (!customer) {
         res.status(404).send('The genre with given ID was not found.');
-    }else{
+    } else {
         res.send(customer);
     }
 
 });
 
-router.delete('/:id',async (req, res) => {
+router.delete('/:id', async (req, res) => {
     const customer = await db.remove(req.params.id);
 
-    if(!customer){
+    if (!customer) {
         res.status(404).send('The genre with given ID was not found.');
-    }else{
+    } else {
 
         res.send(customer);
     }
 
 });
 
-function validationGeneres(customer){
+function validationCustomer(customer) {
     const schema = {
         isGold: Joi.boolean().required(),
         name: Joi.string().required(),
