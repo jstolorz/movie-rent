@@ -6,17 +6,20 @@ mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
 
 const genresSchema = new mongoose.Schema(
     {
-        id: Number,
-        name: String
+        name:{
+          type: String,
+          required: true,
+            min: 5,
+            max: 255
+        }
     }
 );
 
 const Genre = mongoose.model('Genre', genresSchema);
 
 module.exports.persist = async function persist(genres){
-    console.log(genres);
+
     const gn = new Genre({
-        id: genres.id,
         name: genres.name
     });
     return result = await gn.save();
@@ -24,28 +27,22 @@ module.exports.persist = async function persist(genres){
 
 module.exports.getAll = async function getAll(){
     return gn = await Genre.find()
-                            .sort({id: 1})
-                            .select({id: 1, name: 1});
+                            .sort({name: 1})
+                            .select({name: 1});
 
 };
 
 module.exports.findOne = async function findOne(id){
-      return genre = await Genre.findOne({ id: id});
+      return genre = await Genre.findOne({ _id: id});
 };
 
 module.exports.update = async function update(id,genres) {
-   console.log('id: ',id);
-   return genre = await Genre.findOneAndUpdate({id: id}, {name: genres.name}, {new: true});
+    return genre = await Genre.findOneAndUpdate({_id: id}, {name: genres.name}, {new: true});
 
 };
 
 module.exports.remove = async function remove(id) {
-    return genre = await Genre.findOneAndDelete(id);
+    return genre = await Genre.findOneAndDelete({_id: id});
 };
-
-
-
-
-
 
 

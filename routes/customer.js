@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../db/repoCustomer');
+const db = require('../repository/repoCustomer');
 const Joi = require('joi');
 
 const router = express.Router();
@@ -72,8 +72,8 @@ router.delete('/:id', async (req, res) => {
 function validationCustomer(customer) {
     const schema = {
         isGold: Joi.boolean().required(),
-        name: Joi.string().required(),
-        phone: Joi.string().min(9).required()
+        name: Joi.string().min(3).max(255).required(),
+        phone: Joi.string().min(9).max(255).required()
     };
     return Joi.validate(customer, schema);
 }
