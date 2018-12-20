@@ -17,6 +17,9 @@ const genresSchema = new mongoose.Schema(
 
 const Genre = mongoose.model('Genre', genresSchema);
 
+module.exports.Genre = Genre;
+module.exports.genresSchema = genresSchema;
+
 module.exports.persist = async function persist(genres){
 
     const gn = new Genre({
