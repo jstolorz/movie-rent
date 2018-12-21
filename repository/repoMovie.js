@@ -15,22 +15,24 @@ const Movie = mongoose.model('Movie', new mongoose.Schema({
     dailyRentalRate: Number
 }));
 
-exports.persist = async function createMovie(title, numberInStock, dailyRentalRate, genreId) {
-    const genre = await Genre.findOne({_id: genreId});
+exports.persist = async function createMovie(movie) {
 
-    const movie = new Movie({
-        title,
+    console.log(movie);
+
+    const genre = await Genre.findOne({_id: movie.genreId});
+
+    const mov = new Movie({
+        title: movie.title,
         genre: {
           _id: genre._id,
           name: genre.name
         },
-        numberInStock,
-        dailyRentalRate
+        numberInStock: movie.numberInStock,
+        dailyRentalRate: movie.dailyRentalRate
     });
 
-    return result = await movie.save();
+    return result = await mov.save();
     //console.log(result);
-
 };
 
 module.exports.getAll = async function getAll(){
@@ -43,21 +45,23 @@ module.exports.findOne = async function findOne(id) {
     return await Movie.findOne({_id: id});
 };
 
-module.exports.update = async function update(id, Movie) {
+module.exports.update = async function update(id, movie) {
    return await Movie.findOneAndUpdate(
        {
            _id : id
        },
        {
-           title: Movie.title,
-           genre: Movie.genre,
-           numberInStock: Movie.numberInStock,
-           dailyRentalRate: Movie.dailyRentalRate
+           title: movie.title,
+           genre: movie.genre,
+           numberInStock: movie.numberInStock,
+           dailyRentalRate: movie.dailyRentalRate
        },
        {
          new: true
        });
 };
+
+
 
 module.exports.remove = async function remove(id) {
     return await Movie.findOneAndDelete({_id: id});
