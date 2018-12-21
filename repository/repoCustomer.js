@@ -20,6 +20,8 @@ const customerShema = mongoose.Schema({
 
 const Customer = mongoose.model('Customer', customerShema);
 
+module.exports.Customer = Customer;
+
 module.exports.persist = async function persist(customer){
 
     const cust = new Customer({
@@ -55,4 +57,6 @@ module.exports.update = async function update(id,customer) {
 module.exports.remove = async function remove(id) {
     return await Customer.findOneAndDelete({_id: id});
 };
+
+
 

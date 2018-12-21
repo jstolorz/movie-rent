@@ -61,7 +61,7 @@ module.exports.update = async function update(id, movie) {
        });
 };
 
-
+module.exports.Movie = Movie;
 
 module.exports.remove = async function remove(id) {
     return await Movie.findOneAndDelete({_id: id});
