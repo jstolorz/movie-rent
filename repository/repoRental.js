@@ -1,27 +1,26 @@
 const mongoose = require('mongoose');
 const Movie = require('../repository/repoMovie');
-const Customer = require('../repository/repoCustomer');
+const Customer = require('../models/modelCustomer');
+const Fawn =  require('fawn');
 
-mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
-    .then(() => console.log('Connected to MongoDB Rental'))
-    .catch(err => console.error('Could not connected to MongoDB Rental...', err));
+Fawn.init(mongoose);
 
 
 const Rental = mongoose.model('Rental', new mongoose.Schema({
     customer: {
         type: new mongoose.Schema({
-           name: {
-               type: String,
-               required: true,
-               minlength: 5,
-               maxlength: 50
-           },
-            isGold:{
-               type: Boolean,
+            name: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            },
+            isGold: {
+                type: Boolean,
                 default: false
             },
             phone: {
-               type: String,
+                type: String,
                 required: true,
                 minlength: 5,
                 maxlength: 50
@@ -31,7 +30,7 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
     },
     movie: {
         type: new mongoose.Schema({
-            title:{
+            title: {
                 type: String,
                 required: true,
                 trim: true,
@@ -61,13 +60,26 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
     }
 }));
 
+
+
+mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
+    .then(() => console.log('Connected to MongoDB Rental'))
+    .catch(err => console.error('Could not connected to MongoDB Rental...', err));
+
+
+
 module.exports.getAll = async function getAll() {
   return await Rental.find()
       .sort('-dateOut');
 };
 
 module.exports.persist = async function createRental(rental) {
-     const customer = Customer.findOne({_id: rental.customerId});
-     const movie = Movie.findOne({_id: rental.movieId});
+
+
+
+};
+
+module.exports.findOne = async function findOne(id){
+
 };
 

@@ -1,25 +1,16 @@
 const mongoose = require('mongoose');
-const { Genre, genresSchema } = require('./repoGandre');
+const gandre = require('../models/modelGandre');
+const Movie = require('../models/modelMovie');
 
 mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
     .then(() => console.log('Connected to MongoDB Movie'))
     .catch(err => console.error('Could not connected to MongoDB Movie...', err));
 
-const Movie = mongoose.model('Movie', new mongoose.Schema({
-    title: String,
-    genre: {
-        type: genresSchema,
-        required: true
-    },
-    numberInStock: Number,
-    dailyRentalRate: Number
-}));
-
 exports.persist = async function createMovie(movie) {
 
     console.log(movie);
 
-    const genre = await Genre.findOne({_id: movie.genreId});
+    const genre = await gandre.Genre.findOne({_id: movie.genreId});
 
     const mov = new Movie({
         title: movie.title,
@@ -36,7 +27,7 @@ exports.persist = async function createMovie(movie) {
 };
 
 module.exports.getAll = async function getAll(){
-   return await Movie.find()
+   return await gandre.Movie.find()
        .sort({title: 1})
        .select({title: 1, genre: 1, numberInStock: 1, dailyRentalRate: 1 });
 };
@@ -61,7 +52,7 @@ module.exports.update = async function update(id, movie) {
        });
 };
 
-module.exports.Movie = Movie;
+
 
 module.exports.remove = async function remove(id) {
     return await Movie.findOneAndDelete({_id: id});

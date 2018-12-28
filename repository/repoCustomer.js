@@ -1,26 +1,9 @@
 const mongoose = require('mongoose');
+const Customer = require('../models/modelCustomer');
 
 mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
     .then(() => console.log('Connected to MongoDB Customer'))
     .catch(err => console.error('Could not connected to MongoDB Customer...', err));
-
-const customerShema = mongoose.Schema({
-    isGold:{
-        type:Boolean,
-        required: true
-    },
-    name:{
-        type: String,
-        required: true
-    },
-    phone:{
-        type: String
-    }
-});
-
-const Customer = mongoose.model('Customer', customerShema);
-
-module.exports.Customer = Customer;
 
 module.exports.persist = async function persist(customer){
 
