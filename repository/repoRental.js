@@ -1,65 +1,11 @@
 const mongoose = require('mongoose');
-const Movie = require('../repository/repoMovie');
-const Customer = require('../models/modelCustomer');
+const {Movie} = require('../models/modelMovie');
+const {Customer} = require('../models/modelCustomer');
+const {Rental} = require('../models/modelRental');
 const Fawn =  require('fawn');
 
+
 Fawn.init(mongoose);
-
-
-const Rental = mongoose.model('Rental', new mongoose.Schema({
-    customer: {
-        type: new mongoose.Schema({
-            name: {
-                type: String,
-                required: true,
-                minlength: 5,
-                maxlength: 50
-            },
-            isGold: {
-                type: Boolean,
-                default: false
-            },
-            phone: {
-                type: String,
-                required: true,
-                minlength: 5,
-                maxlength: 50
-            }
-        }),
-        required: true
-    },
-    movie: {
-        type: new mongoose.Schema({
-            title: {
-                type: String,
-                required: true,
-                trim: true,
-                minlength: 5,
-                maxlength: 255
-            },
-            dailyRentalRate: {
-                type: Number,
-                required: true,
-                min: 0,
-                max: 255
-            }
-        }),
-        required: true
-    },
-    dateOut: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    dateReturned: {
-        type: Date
-    },
-    rentalFee: {
-        type: Number,
-        min: 0
-    }
-}));
-
 
 
 mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
@@ -74,8 +20,41 @@ module.exports.getAll = async function getAll() {
 };
 
 module.exports.persist = async function createRental(rental) {
+   const customer = await Customer.findById(rental.customerId);
+   if(!customer) return 'c400';
 
+   const movie = await Movie.findById(rental.movieId);
+   if(!movie) return 'm400';
 
+   if(movie.numberInStock === 0) return 'in400';
+
+   let rent = new Rental({
+       customer: {
+           _id: customer._id,
+           name: customer.name,
+           phone: customer.phone
+       },
+       movie: {
+           _id: movie._id,
+           title: movie.title,
+           dailyRentalRate: movie.dailyRentalRate
+       }
+   });
+
+   try {
+
+       new Fawn.Task()
+           .save('rentals', rent)
+           .update('movies', {_id: movie._id}, {
+               $inc: {numberInStock: -1}
+           })
+           .run();
+
+       return rent;
+
+   }catch (e) {
+       return 't500';
+   }
 
 };
 

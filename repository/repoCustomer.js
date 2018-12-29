@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Customer = require('../models/modelCustomer');
+const {Customer} = require('../models/modelCustomer');
 
 mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
     .then(() => console.log('Connected to MongoDB Customer'))
