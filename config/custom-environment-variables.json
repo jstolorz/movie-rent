@@ -1,8 +1,4 @@
-
 {
-  "name": "My Express App Development",
-  "mail": {
-    "host": "dev-mail-server",
-    "password": "app_password"
-  }
+  "name": "My Express Application",
+  "jwtPrivateKey": "movie_rent_jwtPrivateKey"
 }

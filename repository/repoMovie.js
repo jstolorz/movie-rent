@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const gandre = require('../models/modelGandre');
-const Movie = require('../models/modelMovie');
+const {Movie} = require('../models/modelMovie');
 
 mongoose.connect('mongodb://localhost/vidly', {useNewUrlParser: true})
     .then(() => console.log('Connected to MongoDB Movie'))

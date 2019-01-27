@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth');
 const express = require('express');
 const db = require('../repository/repoRental');
 const Joi = require('joi');
@@ -7,22 +8,33 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.get('/', async (req, res) => {
-    let rentals = await db.getAll();
-    res.send(rentals);
-});
+function asyncMiddleware(handler) {
 
-router.post('/', async (req, res) =>{
+    return async (req, res, next) => {
+        try {
+            await handler(req, res);
+        } catch (e) {
+            next(e);
+        }
+    }
+}
+
+router.get('/', asyncMiddleware( async (req, res) => {
+          rentals = await db.getAll();
+          res.send(rentals);
+}));
+
+router.post('/',auth, async (req, res) =>{
 
     const {error} = validateRental(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
    let result = await db.persist(req.body);
-   if(result.equal('c400')) {
+   if(result === 'c400') {
        res.status(400).send('Invalid Customer');
    }
 
-    if(result.equal('m400')) {
+    if(result === 'm400') {
         res.status(400).send('Invalid Movie');
     }
     res.send(result);

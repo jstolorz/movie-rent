@@ -16,9 +16,12 @@ module.exports.persist = async function persist(genres){
 };
 
 module.exports.getAll = async function getAll(){
-    return gn = await model.Genre.find()
-                            .sort({name: 1})
-                            .select({name: 1});
+
+    const gn = await model.Genre.find()
+          .sort({name: 1})
+          .select({name: 1});
+
+    return gn;
 
 };
 

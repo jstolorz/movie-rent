@@ -11,4 +11,4 @@ const Movie = mongoose.model('Movie', new mongoose.Schema({
     dailyRentalRate: Number
 }));
 
-module.exports = Movie;
+module.exports.Movie = Movie;

@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth');
 const express = require('express');
 const db = require('../repository/repoCustomer');
 const Joi = require('joi');
@@ -6,12 +7,12 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.get('/', async (req, res) => {
+router.get('/',async (req, res) => {
     let customer = await db.getAll();
     res.send(customer);
 });
 
-router.post('/', async (req, res) => {
+router.post('/',auth, async (req, res) => {
 
     const {error} = validationCustomer(req.body);
 

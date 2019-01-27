@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth');
 const db = require('../repository/repoMovie');
 const express = require('express');
 const Joi = require('joi');
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
     res.send(movies);
 });
 
-router.post('/', async (req, res) => {
+router.post('/',auth, async (req, res) => {
       const {error} = validation(req.body);
 
       if(error) return res.status(400).send(error.details[0].message);
